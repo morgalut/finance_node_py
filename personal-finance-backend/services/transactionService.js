@@ -8,7 +8,12 @@ const Transaction = require('../models/transaction');
 const createTransaction = async (transactionData) => {
     try {
         const transaction = new Transaction(transactionData);
-        return await transaction.save();
+        const savedTransaction = await transaction.save();
+
+        // Send transaction data to the neural network
+        await NeuralNetworkService.processTransaction(savedTransaction);
+
+        return savedTransaction;
     } catch (error) {
         console.error('Error creating transaction:', error);
         throw new Error('Failed to create transaction');
